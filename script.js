@@ -1,24 +1,27 @@
 // script.js
-const { PDFDocument } = PDFLib; // only used for merge
-const dropZone  = document.getElementById('drop-zone');
-const fileInput = document.getElementById('file-input');
-const fileList  = document.getElementById('file-list');
-const mergeBtn  = document.getElementById('merge-btn');
-const statusDiv = document.getElementById('status');
-let selectedFiles = [];
+const { PDFDocument } = PDFLib;
+const dropZone     = document.getElementById('drop-zone');
+const fileInput    = document.getElementById('file-input');
+const fileList     = document.getElementById('file-list');
+const mergeBtn     = document.getElementById('merge-btn');
+const statusDiv    = document.getElementById('status');
+const carousel     = document.getElementById('carousel-container');
+const scrollLeft   = document.getElementById('scroll-left');
+const scrollRight  = document.getElementById('scroll-right');
+let selectedFiles  = [];
 
-// Create <object> preview for PDF
+// Preview via <object>
 function createPreviewObject(file) {
   const url = URL.createObjectURL(file);
   const embed = document.createElement('object');
   embed.type = 'application/pdf';
   embed.data = url;
-  embed.width = 80;
-  embed.height = 100;
+  embed.width = 100;
+  embed.height = 140;
   return embed;
 }
 
-// Update horizontal list
+// Update list
 function updateFileList() {
   fileList.innerHTML = '';
   selectedFiles.forEach((file) => {
@@ -29,7 +32,7 @@ function updateFileList() {
     handle.className = 'fa-solid fa-grip-lines handle';
 
     const preview = createPreviewObject(file);
-    const label = document.createElement('p');
+    const label   = document.createElement('p');
     label.textContent = file.name;
     label.className = 'text-xs truncate mt-2';
 
@@ -38,7 +41,7 @@ function updateFileList() {
   });
 }
 
-// Init horizontal Sortable once
+// Init Sortable once
 document.addEventListener('DOMContentLoaded', () => {
   new Sortable(fileList, {
     direction: 'horizontal',
@@ -49,9 +52,17 @@ document.addEventListener('DOMContentLoaded', () => {
       selectedFiles.splice(evt.newIndex, 0, moved);
     }
   });
+
+  // Scroll buttons
+  scrollLeft.addEventListener('click', () =>
+    carousel.scrollBy({ left: -200, behavior: 'smooth' })
+  );
+  scrollRight.addEventListener('click', () =>
+    carousel.scrollBy({ left: 200, behavior: 'smooth' })
+  );
 });
 
-// Drag & drop and file input
+// Drag & drop + file input
 ['dragenter','dragover','dragleave','drop'].forEach(evt =>
   dropZone.addEventListener(evt, e => e.preventDefault())
 );
@@ -67,7 +78,7 @@ fileInput.addEventListener('change', e => {
   updateFileList();
 });
 
-// Merge PDF
+// Merge PDFs
 mergeBtn.addEventListener('click', async () => {
   if (!selectedFiles.length) {
     alert('Pilih file PDF terlebih dahulu!');

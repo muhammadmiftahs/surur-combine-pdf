@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body class="bg-gradient-to-r from-blue-100 to-white min-h-screen flex items-center justify-center p-4">
-  <div class="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-2xl" data-aos="fade-up">
+  <div class="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-2xl relative" data-aos="fade-up">
     <h1 class="text-3xl font-extrabold text-center mb-6 flex items-center justify-center">
       <i class="fas fa-file-pdf text-red-500 mr-3 animate__animated animate__pulse"></i>
       Surur Combine PDF
@@ -29,15 +29,22 @@
       <input type="file" id="file-input" multiple accept="application/pdf" class="hidden" />
     </div>
 
-    <!-- Horizontal File Carousel -->
-    <div class="relative overflow-x-auto" id="carousel-container">
-      <ul id="file-list" class="flex space-x-4 pb-2"></ul>
+    <!-- Carousel dengan tombol scroll -->
+    <div id="carousel-wrapper" class="relative">
+      <button id="scroll-left" class="absolute left-0 top-1/2 transform -translate-y-1/2 p-2 bg-white rounded-full shadow-md z-10 hover:bg-gray-100 transition">
+        <i class="fas fa-chevron-left text-gray-600"></i>
+      </button>
+      <div id="carousel-container" class="overflow-x-auto scrollbar-hide">
+        <ul id="file-list" class="flex space-x-4 pb-2"></ul>
+      </div>
+      <button id="scroll-right" class="absolute right-0 top-1/2 transform -translate-y-1/2 p-2 bg-white rounded-full shadow-md z-10 hover:bg-gray-100 transition">
+        <i class="fas fa-chevron-right text-gray-600"></i>
+      </button>
     </div>
 
     <button id="merge-btn" class="w-full bg-blue-500 text-white py-3 rounded-xl font-semibold hover:bg-blue-600 transition flex items-center justify-center mt-4">
       <i class="fas fa-compress-arrows-alt mr-2"></i> Merge PDFs
     </button>
-
     <div id="status" class="mt-4 text-center text-gray-600"></div>
   </div>
 

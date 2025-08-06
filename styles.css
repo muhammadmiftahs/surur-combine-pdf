@@ -1,41 +1,31 @@
-/* Tombol scrollbar custom */
 .scrollbar-hide::-webkit-scrollbar { display: none; }
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-
-/* Horizontal carousel & file item styling */
-ul#file-list {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
+ul#file-list { margin: 0; padding: 0; list-style: none; }
 ul#file-list li {
-  position: relative;
-  width: 120px;
-  min-width: 120px;
-  background: #f9fafb;
-  border-radius: 0.75rem;
-  padding: 0.5rem;
-  cursor: grab;
-  text-align: center;
-  transition: transform 0.2s;
+  position: relative; width: 130px; min-width: 130px;
+  background: #f9fafb; border-radius: 0.75rem; padding: 0.5rem;
+  cursor: grab; text-align: center; transition: transform 0.2s;
 }
 ul#file-list li:active { cursor: grabbing; }
 ul#file-list li:hover { transform: translateY(-5px); }
 ul#file-list li .handle {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  cursor: grab;
-  font-size: 1.25rem;
-  color: #4b5563;
+  position: absolute; top: 6px; right: 6px;
+  cursor: grab; font-size: 1.25rem; color: #4b5563;
 }
-
-/* Preview PDF lebih besar */
 ul#file-list li object {
-  width: 100px;
-  height: 140px;
-  border-radius: 0.5rem;
-  background: #e5e7eb;
+  width: 100px; height: 140px;
+  border-radius: 0.5rem; background: #e5e7eb;
 }
-
+ul#file-list li .info {
+  font-size: 0.75rem; color: #374151; margin-top: 0.25rem;
+}
+ul#file-list li .move-btn {
+  position: absolute; bottom: 6px;
+  font-size: 0.9rem; color: #6b7280; padding: 2px 4px;
+  background: rgba(255,255,255,0.8); border-radius: 0.25rem;
+  cursor: pointer; transition: background 0.2s;
+}
+ul#file-list li .move-left { left: 6px; }
+ul#file-list li .move-right { right: 6px; }
+ul#file-list li .move-btn:hover { background: rgba(243,244,246,0.9); }
 #drop-zone:hover { background-color: rgba(59, 130, 246, 0.1); }

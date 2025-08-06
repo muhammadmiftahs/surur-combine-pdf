@@ -1,4 +1,4 @@
-// script.js – tidak berubah
+// script.js (tidak berubah)
 const { PDFDocument } = PDFLib;
 const dropZone     = document.getElementById('drop-zone');
 const fileInput    = document.getElementById('file-input');

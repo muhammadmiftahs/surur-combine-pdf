@@ -1,4 +1,3 @@
-// script.js (tidak berubah)
 const { PDFDocument } = PDFLib;
 const dropZone     = document.getElementById('drop-zone');
 const fileInput    = document.getElementById('file-input');
@@ -70,10 +69,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 dropZone.addEventListener('click', () => fileInput.click());
 ['dragenter','dragover','dragleave','drop'].forEach(e => dropZone.addEventListener(e, ev => ev.preventDefault()));
-'drop'.split(',').forEach(evt => dropZone.addEventListener(evt, e => {
+dropZone.addEventListener('drop', e => {
   selectedFiles = Array.from(e.dataTransfer.files).filter(f => f.type === 'application/pdf');
   updateFileList();
-}));
+});
 fileInput.addEventListener('change', e => { selectedFiles = Array.from(e.target.files); updateFileList(); });
 
 mergeBtn.addEventListener('click', async () => {

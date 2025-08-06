@@ -1,3 +1,7 @@
+/* Tombol scrollbar custom */
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
 /* Horizontal carousel & file item styling */
 ul#file-list {
   margin: 0;
@@ -6,8 +10,8 @@ ul#file-list {
 }
 ul#file-list li {
   position: relative;
-  width: 100px;
-  min-width: 100px;
+  width: 120px;
+  min-width: 120px;
   background: #f9fafb;
   border-radius: 0.75rem;
   padding: 0.5rem;
@@ -19,15 +23,19 @@ ul#file-list li:active { cursor: grabbing; }
 ul#file-list li:hover { transform: translateY(-5px); }
 ul#file-list li .handle {
   position: absolute;
-  top: 6px;
-  right: 6px;
+  top: 8px;
+  right: 8px;
   cursor: grab;
-  color: #6b7280;
+  font-size: 1.25rem;
+  color: #4b5563;
 }
+
+/* Preview PDF lebih besar */
 ul#file-list li object {
-  width: 80px;
-  height: 100px;
+  width: 100px;
+  height: 140px;
   border-radius: 0.5rem;
   background: #e5e7eb;
 }
+
 #drop-zone:hover { background-color: rgba(59, 130, 246, 0.1); }

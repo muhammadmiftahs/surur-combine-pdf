@@ -1,5 +1,5 @@
 // script.js
-const { PDFDocument } = PDFLib;
+const { PDFDocument } = PDFLib; // only used for merge
 const dropZone  = document.getElementById('drop-zone');
 const fileInput = document.getElementById('file-input');
 const fileList  = document.getElementById('file-list');
@@ -7,49 +7,38 @@ const mergeBtn  = document.getElementById('merge-btn');
 const statusDiv = document.getElementById('status');
 let selectedFiles = [];
 
-// Render thumbnail for each PDF file
-async function renderThumbnail(file) {
-  const arrayBuffer = await file.arrayBuffer();
-  const pdf = await PDFDocument.load(arrayBuffer);
-  const page = pdf.getPage(0);
-  const viewport = page.getViewport({ scale: 0.2 });
-
-  // create canvas
-  const canvas = document.createElement('canvas');
-  const context = canvas.getContext('2d');
-  canvas.width = viewport.width;
-  canvas.height = viewport.height;
-
-  // render to canvas (via pdf-lib to SVG then image is complex)
-  // fallback: use object URL for embed preview
-  const url = URL.createObjectURL(new Blob([arrayBuffer], { type: 'application/pdf' }));
+// Create <object> preview for PDF
+function createPreviewObject(file) {
+  const url = URL.createObjectURL(file);
   const embed = document.createElement('object');
   embed.type = 'application/pdf';
   embed.data = url;
-  embed.width = viewport.width;
-  embed.height = viewport.height;
+  embed.width = 80;
+  embed.height = 100;
   return embed;
 }
 
 // Update horizontal list
-async function updateFileList() {
+function updateFileList() {
   fileList.innerHTML = '';
-  for (const file of selectedFiles) {
+  selectedFiles.forEach((file) => {
     const li = document.createElement('li');
     li.classList.add('animate__animated', 'animate__fadeInUp');
+
     const handle = document.createElement('i');
     handle.className = 'fa-solid fa-grip-lines handle';
-    const thumb = await renderThumbnail(file);
+
+    const preview = createPreviewObject(file);
     const label = document.createElement('p');
     label.textContent = file.name;
     label.className = 'text-xs truncate mt-2';
 
-    li.append(handle, thumb, label);
+    li.append(handle, preview, label);
     fileList.appendChild(li);
-  }
+  });
 }
 
-// Init Sortable horizontal
+// Init horizontal Sortable once
 document.addEventListener('DOMContentLoaded', () => {
   new Sortable(fileList, {
     direction: 'horizontal',
@@ -62,10 +51,11 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-// Drag/drop & file input
+// Drag & drop and file input
 ['dragenter','dragover','dragleave','drop'].forEach(evt =>
   dropZone.addEventListener(evt, e => e.preventDefault())
 );
+
 dropZone.addEventListener('drop', e => {
   selectedFiles = Array.from(e.dataTransfer.files)
     .filter(f => f.type === 'application/pdf');
@@ -77,9 +67,12 @@ fileInput.addEventListener('change', e => {
   updateFileList();
 });
 
-// Merge
+// Merge PDF
 mergeBtn.addEventListener('click', async () => {
-  if (!selectedFiles.length) return alert('Pilih file PDF terlebih dahulu!');
+  if (!selectedFiles.length) {
+    alert('Pilih file PDF terlebih dahulu!');
+    return;
+  }
   statusDiv.textContent = 'Menggabungkan...';
 
   const pdfDoc = await PDFDocument.create();
@@ -97,6 +90,5 @@ mergeBtn.addEventListener('click', async () => {
   a.href       = url;
   a.download   = 'merged.pdf';
   a.click();
-
   statusDiv.textContent = 'Selesai! File telah diunduh.';
 });

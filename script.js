@@ -1,4 +1,4 @@
-// script.js
+// script.js – tidak berubah
 const { PDFDocument } = PDFLib;
 const dropZone     = document.getElementById('drop-zone');
 const fileInput    = document.getElementById('file-input');
@@ -11,7 +11,6 @@ const scrollLeft   = document.getElementById('scroll-left');
 const scrollRight  = document.getElementById('scroll-right');
 let selectedFiles  = [];
 
-// Preview <object>
 function createPreviewObject(file) {
   const url = URL.createObjectURL(file);
   const embed = document.createElement('object');
@@ -22,14 +21,12 @@ function createPreviewObject(file) {
   return embed;
 }
 
-// Load page count
 async function getPageCount(file) {
   const buf = await file.arrayBuffer();
   const pdf = await PDFDocument.load(buf);
   return pdf.getPageCount();
 }
 
-// Re-render list + update total pages
 async function updateFileList() {
   fileList.innerHTML = '';
   let total = 0;
@@ -38,16 +35,12 @@ async function updateFileList() {
     total += pages;
     const li = document.createElement('li');
     li.classList.add('animate__animated','animate__fadeInUp');
-    // handle
     const handle = document.createElement('i');
     handle.className = 'fa-solid fa-grip-lines handle';
-    // preview
     const preview = createPreviewObject(file);
-    // filename & count
     const info = document.createElement('p');
     info.className = 'info';
     info.textContent = `${file.name} (${pages} halaman)`;
-    // move buttons
     const btnL = document.createElement('div');
     btnL.className = 'move-btn move-left';
     btnL.innerHTML = '<i class="fas fa-arrow-left"></i>';
@@ -56,14 +49,12 @@ async function updateFileList() {
     btnR.className = 'move-btn move-right';
     btnR.innerHTML = '<i class="fas fa-arrow-right"></i>';
     btnR.onclick = () => moveItem(i, i+1);
-
     li.append(handle, preview, info, btnL, btnR);
     fileList.appendChild(li);
   }
   totalPagesEl.textContent = `Total halaman: ${total}`;
 }
 
-// Move item in array then re-render
 function moveItem(oldIdx, newIdx) {
   if (newIdx < 0 || newIdx >= selectedFiles.length) return;
   const [m] = selectedFiles.splice(oldIdx, 1);
@@ -71,36 +62,20 @@ function moveItem(oldIdx, newIdx) {
   updateFileList();
 }
 
-// Init Sortable horizontal
 document.addEventListener('DOMContentLoaded', () => {
-  new Sortable(fileList, {
-    direction: 'horizontal', handle: '.handle', animation: 200,
-    onEnd(evt) { moveItem(evt.oldIndex, evt.newIndex); }
-  });
-  scrollLeft.addEventListener('click', () =>
-    carousel.scrollBy({ left: -200, behavior: 'smooth' })
-  );
-  scrollRight.addEventListener('click', () =>
-    carousel.scrollBy({ left: 200, behavior: 'smooth' })
-  );
+  new Sortable(fileList, { direction: 'horizontal', handle: '.handle', animation: 200, onEnd(evt) { moveItem(evt.oldIndex, evt.newIndex); } });
+  scrollLeft.addEventListener('click', () => carousel.scrollBy({ left: -200, behavior: 'smooth' }));
+  scrollRight.addEventListener('click', () => carousel.scrollBy({ left: 200, behavior: 'smooth' }));
 });
 
-// Drag & drop + File input
 dropZone.addEventListener('click', () => fileInput.click());
-['dragenter','dragover','dragleave','drop'].forEach(e =>
-  dropZone.addEventListener(e, ev => ev.preventDefault())
-);
-dropZone.addEventListener('drop', ev => {
-  selectedFiles = Array.from(ev.dataTransfer.files)
-    .filter(f => f.type === 'application/pdf');
+['dragenter','dragover','dragleave','drop'].forEach(e => dropZone.addEventListener(e, ev => ev.preventDefault()));
+'drop'.split(',').forEach(evt => dropZone.addEventListener(evt, e => {
+  selectedFiles = Array.from(e.dataTransfer.files).filter(f => f.type === 'application/pdf');
   updateFileList();
-});
-fileInput.addEventListener('change', ev => {
-  selectedFiles = Array.from(ev.target.files);
-  updateFileList();
-});
+}));
+fileInput.addEventListener('change', e => { selectedFiles = Array.from(e.target.files); updateFileList(); });
 
-// Merge
 mergeBtn.addEventListener('click', async () => {
   if (!selectedFiles.length) return alert('Pilih file PDF terlebih dahulu!');
   statusDiv.textContent = 'Menggabungkan...';
@@ -114,8 +89,6 @@ mergeBtn.addEventListener('click', async () => {
   const merged = await pdfDoc.save();
   const blob   = new Blob([merged], { type: 'application/pdf' });
   const url    = URL.createObjectURL(blob);
-  const a      = document.createElement('a');
-  a.href       = url;
-  a.download   = 'merged.pdf'; a.click();
+  const a      = document.createElement('a'); a.href = url; a.download = 'merged.pdf'; a.click();
   statusDiv.textContent = 'Selesai! File telah diunduh.';
 });
